@@ -31,9 +31,6 @@
         </div>
       </div>
     </div>
-    <div>
-      <router-view name="expertDetail"></router-view>
-    </div>
   </div>
 </template>
 
@@ -76,7 +73,7 @@ export default {
       this.isActive = item
     },
     showDetail(){
-      this.$router.push({name:'expertDetail'})
+      this.$router.push({name:'expertDetail',query:{name:'科创专家'}})
     }
   }
 }

@@ -12,10 +12,10 @@
           <li :class="{activeMenu: activeMenu === item.name}" v-for="item in categoryBtn" @click="chooseMenu(item)">{{ item.name }}</li>
         </ul>
       </div>
-      <div style="padding: 20px 0 0 20px;flex: 1;position: relative;">
+      <div style="padding: 20px 0 0 20px;flex: 1;position: relative;max-height: 1090px;overflow: auto">
         <div v-if="!detailShow" class="card" style="width:100%;height: 251px;color: #666" v-for="(item, index) in list">
           <div style="display: flex">
-            <img src="/images/abilityList.png" alt="" width="303" height="191" style="margin-right: 24px">
+            <img :src="item.picture_url" alt="" width="303" height="191" style="margin-right: 24px">
             <div style="flex: 1;position: relative">
               <div style="display: flex;justify-content: space-between;align-items: center">
                 <p style="font-weight: bold;color: #181818;">{{ item.ability_name }} <span style="color:#00D856;">{{ item.ability_level }}</span></p>

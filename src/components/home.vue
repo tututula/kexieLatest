@@ -66,9 +66,9 @@
         </CarouselItem>
       </Carousel>
     </div>
-    <div style="height: 1206px;padding: 100px 0 0;text-align: center;position:relative;">
+    <div style="padding: 100px 0 0;text-align: center;">
       <p class="titles">历史立项课题</p>
-      <div style="padding: 0 370px;height: 740px;position: relative;z-index: 100">
+      <div style="padding: 0 370px;height: 450px;">
         <div style="position: relative">
           <Divider style="position: absolute;top: 98%;margin: 0"/>
           <div class="historyMenu" style="display: flex;font-size: 16px;">
@@ -89,46 +89,51 @@
               </div>
             </div>
           </div>
-          <Carousel v-model="value1" loop dots="none" arrow="always" style="padding: 34px 0 0;height: calc(100% - 238px)">
-            <CarouselItem>
-              <div class="carouselItem">
-                <div style="width: 138px;height: 200px;margin-right: 30px">
-                  <img src="" alt="" style="width: 100%;height: 100%">
+        </div>
+      </div>
+    </div>
+    <div class="expert" style="padding: 100px 0 0;text-align: center;position:relative;">
+      <p class="titles" style="position: relative;z-index: 101">科创专家展示</p>
+      <div style="padding: 0 370px;text-align: center;position: relative;z-index: 100">
+        <Carousel v-model="value1" loop dots="none" arrow="always" height="500">
+          <CarouselItem>
+            <div class="carouselItem">
+              <div style="width: 138px;height: 200px;margin-right: 30px">
+                <img src="" alt="" style="width: 100%;height: 100%">
+              </div>
+              <div style="flex: 1">
+                <div style="text-align: left">
+                  <span style="font-weight: bold;color: #000000;font-size: 20px">车少帅</span>
+                  <span style="font-size: 14px;margin-left: 15px">研发中心-AI工作组</span>
+                  <span style="font-size: 14px;margin-left: 170px">人才级别</span>
+                  <span style="font-size: 18px;font-weight: bold;color: #2B5FBE;margin-left: 15px">省公司专家一级</span>
                 </div>
-                <div style="flex: 1">
-                  <div style="text-align: left">
-                    <span style="font-weight: bold;color: #000000;font-size: 20px">车少帅</span>
-                    <span style="font-size: 14px;margin-left: 15px">研发中心-AI工作组</span>
-                    <span style="font-size: 14px;margin-left: 170px">人才级别</span>
-                    <span style="font-size: 18px;font-weight: bold;color: #2B5FBE;margin-left: 15px">省公司专家一级</span>
+                <div style="display: flex;padding-top: 20px">
+                  <div style="padding-right: 50px">
+                    <p style="font-size: 26px;font-weight: bold;color: #2B5FBE;">PC-4</p>
+                    <p>岗位级别</p>
                   </div>
-                  <div style="display: flex;padding-top: 20px">
-                    <div style="padding-right: 50px">
-                      <p style="font-size: 26px;font-weight: bold;color: #2B5FBE;">PC-4</p>
-                      <p>岗位级别</p>
-                    </div>
-                    <div class="abilityDirection" style="width: 196px;text-align: center">
-                      <div>
-                        <p style="font-size: 26px;font-weight: bold;color: #2B5FBE;">图像类型</p>
-                        <p>能力方向</p>
-                      </div>
-                    </div>
-                    <div style="padding-left: 50px">
-                      <p style="font-size: 26px;font-weight: bold;color: #2B5FBE;">2046</p>
-                      <p>总积分</p>
+                  <div class="abilityDirection" style="width: 196px;text-align: center">
+                    <div>
+                      <p style="font-size: 26px;font-weight: bold;color: #2B5FBE;">图像类型</p>
+                      <p>能力方向</p>
                     </div>
                   </div>
-                  <div style="display: flex;padding: 20px 0 15px;flex-wrap: wrap">
-                    <div class="abilityTag" style="" v-for="i in 20">66rrrr6</div>
+                  <div style="padding-left: 50px">
+                    <p style="font-size: 26px;font-weight: bold;color: #2B5FBE;">2046</p>
+                    <p>总积分</p>
                   </div>
-                  <div style="text-align: left">
-                    <span style="font-weight: bold;color: #000">主导科创能力 : </span><span>AI-图像视频/大数据</span>
-                  </div>
+                </div>
+                <div style="display: flex;padding: 20px 0 15px;flex-wrap: wrap">
+                  <div class="abilityTag" style="" v-for="i in 20">66rrrr6</div>
+                </div>
+                <div style="text-align: left">
+                  <span style="font-weight: bold;color: #000">主导科创能力 : </span><span>AI-图像视频/大数据</span>
                 </div>
               </div>
-            </CarouselItem>
-          </Carousel>
-        </div>
+            </div>
+          </CarouselItem>
+        </Carousel>
       </div>
       <div style="position: absolute;bottom: 0;width: 100%">
         <div style="height: 615px;background-image: url('/images/historyBg.png');background-size: 100% 100%;position: relative;">
@@ -136,7 +141,7 @@
             <p style="width: 553px;font-size: 26px;font-weight: 400;color: #FFFFFF;text-align: left;line-height: 51px;letter-spacing: 2px;">
               联系我们的专家，我们将竭诚为您提供政府与公共事业咨询服务
             </p>
-            <Button type="default" ghost style="margin: 40px 0 0 100px">查看案例</Button>
+            <!--            <Button type="default" ghost style="margin: 40px 0 0 100px">查看案例</Button>-->
           </div>
         </div>
       </div>
@@ -295,20 +300,13 @@ export default {
   position: relative;
   margin-top: 30px;
   width: 100%;
-  height: 660px;
+  height: 400px;
   border-radius: 8px 8px 8px 8px;
   background: rgba(205, 217, 233,0.4);
   opacity: 1;
-  padding: 60px 40px 50px;
-/*  &::before{
-    content: '';
-    position: absolute;
-    z-index: -1;
-    top:0;right:0;bottom:0;left:0;
-    background: inherit;
-    background-attachment: fixed;
-    filter: blur(30px);
-  }*/
+  padding: 60px 40px;
+}
+.expert{
   ::v-deep .ivu-carousel-arrow{
     background: #FFF;
     color: #91aedd;
@@ -321,6 +319,10 @@ export default {
     line-height: 62px;
   }
   .carouselItem{
+    height: 100%;
+    margin-top: 30px;
+    border-radius: 8px 8px 8px 8px;
+    background: rgba(205, 217, 233,0.4);
     display: flex;
     padding: 55px 130px;
     .abilityDirection{

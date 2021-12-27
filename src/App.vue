@@ -8,16 +8,18 @@
             <li v-for="item in menu" ><router-link :to="{path: item.url, query:{ name: item.name }}">{{ item.name }}</router-link></li>
           </ul>
         </div>
-        <div style="display: flex;align-items: center;float: right">
+<!--        <div style="display: flex;align-items: center;float: right">
           <Input suffix="ios-search" placeholder="Enter text" style="width: 188px;height:32px;margin-left: 11.5%" />
           <Button  type="text" style="margin: 0 38px 0 24px">登录</Button>
           <Button  type="primary" style="background: #2B5FBE">免费注册</Button>
-        </div>
+        </div>-->
       </div>
     </header>
     <router-view></router-view>
     <footer>
-      <div style="height: 280px;"></div>
+      <div class="flex-center" style="height: 80px;">
+        <p>© 2020 中国电信股份有限公司 版权所有 京ICP备09031924号</p>
+      </div>
     </footer>
   </div>
 </template>
@@ -127,7 +129,7 @@ header {
 }
 footer{
   width: 100%;
-  height: 280px;
+  height: 80px;
   background: #232E45;
 }
 .ivu-input{
@@ -137,9 +139,28 @@ footer{
   border-radius: 0!important;
 }
 .childPage{
-  padding: 0 370px 80px;margin-top: -78px;position: relative;
+  padding: 0 370px 80px;
+  margin-top: -78px;
+  position: relative;
+  box-sizing: content-box;
 }
 
-
+*::-webkit-scrollbar {
+  /*滚动条整体样式*/
+  width : 6px;  /*高宽分别对应横竖滚动条的尺寸*/
+  height: 1px;
+}
+*::-webkit-scrollbar-thumb {
+  /*滚动条里面小方块*/
+  border-radius: 10px;
+  box-shadow   : inset 0 0 5px rgba(0, 0, 0, 0.2);
+  background   : #8cb7ec;
+}
+*::-webkit-scrollbar-track {
+  /*滚动条里面轨道*/
+  box-shadow   : inset 0 0 5px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  background   : #ededed;
+}
 
 </style>

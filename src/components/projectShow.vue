@@ -17,18 +17,16 @@
       </div>
       <div style="padding: 20px 0">
         所属方向 :
-      <RadioGroup v-model="border" type="button" button-style="solid">
-        <Radio label="全部" border></Radio>
-        <Radio label="类目一" border></Radio>
-        <Radio label="类目二" border></Radio>
-        <Radio label="类目三" border></Radio>
+      <RadioGroup v-model="formData.direction" type="button" button-style="solid">
+        <Radio v-for="item in categoryBtn" :label="item.id" border>{{item.name}}</Radio>
       </RadioGroup>
       </div>
       <div style="display: flex">
         <div>负责人 :
-          <Select v-model="model1" style="width:272px">
-          <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-        </Select></div>
+          <Select v-model="formData.personInChargeValue" style="width:272px" clearable>
+            <Option v-for="item in personInCharge" :value="item.id" :key="item.value">{{ item.name }}</Option>
+          </Select>
+        </div>
         <div style="margin-left: 30px">能力类型 :
           <Select v-model="model1" style="width:272px">
           <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
@@ -38,7 +36,7 @@
         <Table :data="tableData" :columns="tableColumns" stripe></Table>
         <div style="margin: 30px 0 0;overflow: hidden">
           <div style="float: right;">
-            <Page :total="100" :current="1" @on-change="changePage" show-elevator show-sizer show-total ></Page>
+            <Page :total="total" :current="page" @on-change="changePage" show-elevator show-sizer show-total ></Page>
           </div>
         </div>
       </div>
@@ -52,8 +50,39 @@ export default {
   data(){
     return {
       formItem:{},
-      border:'全部',
       isActive: 2021,
+      page:1,
+      total:0,
+      categoryBtn:[
+        {
+          name: '全部',
+          id: ''
+        },
+        {
+          name: '流媒体',
+          id: '10735e3e0bc44627998c76cbf72f8fdf'
+        },
+        {
+          name: 'AI',
+          id: '954be9c42f6d43aab2fa5f38f91ba2b4'
+        },
+        {
+          name: '大数据',
+          id: 'df8bb75009544683bcadf4a8bd1b112e'
+        },
+        {
+          name: '通用技术',
+          id: '920b38ddb2044c7dbd7f4e6c26c2319b'
+        },
+        {
+          name: '云网融合',
+          id: 'a6b3590474774d688ab789e9d2cba8c6'
+        },
+        {
+          name: '信创与信息安全',
+          id: 'a83f8353601d49a8887f26e9709f81c2'
+        }
+      ],
       menuItem:[
         2021,
         2020,
@@ -125,12 +154,61 @@ export default {
           align: 'center',
           key: '6'
         },
-      ]
+      ],
+      personInCharge:[],
+      directionList:[],
+      formData:{
+        personInChargeValue:'',
+        year: 2021,
+        direction:'',
+      }
     }
+  },
+  mounted() {
+    this.init()
   },
   methods:{
     menuClick(item){
       this.isActive = item
+      this.formData.year = item
+    },
+    queryList(){
+      this.$axios.post('/sdata/rest/service/dataapi/rest/7679c6b3-a2fe-4fd9-b201-b61470bb0b72', {
+          "key": "apikey",
+          "pageNum": "1",
+          "pageSize": "20",
+          "manager_name": "",
+          "provide_type": "",
+          "setup_time": "",
+          "subject_name": "",
+          "id": "",
+          "direction": "",
+          "department": ""
+      })
+    },
+    queryPersonInCharge(){
+      this.$axios.post('/sdata/rest/dataservice/rest/orchestration/e91fc804-6fc6-4a23-8cdd-257c80e8d2c2', {
+        "param": {
+          "year": this.formData.year
+        }
+      }).then((res)=>{
+        this.personInCharge = res.data.result.expert
+      })
+    },
+    queryDirection(){
+      this.$axios.post('/sdata/rest/dataservice/rest/orchestration/a8d0bc03-1985-43cf-8cef-6411db7ee3d8', {
+        "param": {
+          "year": this.formData.year
+        }
+      }).then((res)=>{
+        this.directionList = res.data.result.direction
+      })
+
+    },
+    init(){
+      this.queryList()
+      this.queryPersonInCharge()
+      this.queryDirection()
     }
   }
 }
