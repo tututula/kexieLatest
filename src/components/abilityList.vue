@@ -13,7 +13,7 @@
         </ul>
       </div>
       <div style="padding: 20px 0 0 20px;flex: 1;position: relative;max-height: 1090px;overflow: auto">
-        <div v-if="!detailShow" class="card" style="width:100%;height: 251px;color: #666" v-for="(item, index) in list">
+        <div v-if="!detailShow" class="card" style="width:99%;height: 251px;color: #666" v-for="(item, index) in list">
           <div style="display: flex">
             <img :src="item.picture_url" alt="" width="303" height="191" style="margin-right: 24px">
             <div style="flex: 1;position: relative">

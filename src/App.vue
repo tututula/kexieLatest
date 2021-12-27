@@ -147,7 +147,7 @@ footer{
 
 *::-webkit-scrollbar {
   /*滚动条整体样式*/
-  width : 6px;  /*高宽分别对应横竖滚动条的尺寸*/
+  width : 4px;  /*高宽分别对应横竖滚动条的尺寸*/
   height: 1px;
 }
 *::-webkit-scrollbar-thumb {
