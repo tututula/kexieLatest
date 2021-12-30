@@ -10,43 +10,46 @@
                   <img src="" alt="" style="width: 100%;height: 100%">
                 </div>
                 <div style="flex: 1">
-                  <div style="text-align: left">
-                    <span style="font-weight: bold;color: #000000;font-size: 20px">车少帅</span>
-                    <span style="font-size: 14px;margin-left: 15px">研发中心-AI工作组</span>
-                    <span style="font-size: 14px;margin-left: 170px">人才级别</span>
-                    <span style="font-size: 18px;font-weight: bold;color: #2B5FBE;margin-left: 15px">省公司专家一级</span>
+                  <div style="display: flex;justify-content: space-between">
+                    <div>
+                      <span style="font-weight: bold;color: #000000;font-size: 20px">zzz{{ expert.name }}</span>
+                      <span style="font-size: 14px;margin-left: 15px">1{{expert.work_team}}</span></div>
+                    <div>
+                      <span style="font-size: 14px;margin-left: 170px">人才级别</span>
+                      <span style="font-size: 18px;font-weight: bold;color: #2B5FBE;margin-left: 15px">1{{expert.talent_level}}</span>
+                    </div>
                   </div>
                   <div style="display: flex;padding-top: 20px">
-                    <div style="padding-right: 50px">
-                      <p style="font-size: 26px;font-weight: bold;color: #2B5FBE;">PC-4</p>
+                    <div style="padding-right: 50px;display: flex;flex-direction: column;justify-content: space-between">
+                      <p style="font-size: 26px;font-weight: bold;color: #2B5FBE;">{{expert.job_leval}}</p>
                       <p>岗位级别</p>
                     </div>
                     <div class="abilityDirection" style="width: 196px;text-align: center">
-                      <div>
-                        <p style="font-size: 26px;font-weight: bold;color: #2B5FBE;">图像类型</p>
+                      <div style="height: 100%;display: flex;flex-direction: column;justify-content: space-between">
+                        <p style="font-size: 26px;font-weight: bold;color: #2B5FBE;">{{expert.ability_type}}</p>
                         <p>能力方向</p>
                       </div>
                     </div>
-                    <div style="padding-left: 50px">
-                      <p style="font-size: 26px;font-weight: bold;color: #2B5FBE;">2046</p>
+                    <div style="padding-left: 50px;display: flex;flex-direction: column;justify-content: space-between">
+                      <p style="font-size: 26px;font-weight: bold;color: #2B5FBE;">{{expert.total_score}}</p>
                       <p>总积分</p>
                     </div>
                   </div>
                 </div>
               </div>
               <div style="display: flex;padding: 20px 0 15px;flex-wrap: wrap">
-                <div class="abilityTag" style="" v-for="i in 20">66rrrr6</div>
+                <div class="abilityTag" style="" v-for="i in expert.telnet">{{}}</div>
               </div>
             </div>
           </Row>
           <Row class="card" style="margin-top: 15px;height: 300px;padding: 10px 40px">
             <Col :span="10">
               <p class="title">主导科创能力</p>
-              <p class="label">人才级别 : <span class="text">c</span></p>
+              <p class="label">人才级别 : <span class="text">{{expert.talent_level}}</span></p>
               <p class="label">科创能力 : <span class="text">a</span></p>
               <p class="label">行业专家 : <span class="text">a</span></p>
               <p class="title">获奖情况</p>
-              <p class="label"  v-for="i in 3">2020年6月  江苏省五一章</p>
+              <p class="label" >{{expert.prizes}}</p>
             </Col>
             <Col :span="14">
               <div id="radar" style="width: 100%;height: 100%"></div>
@@ -55,12 +58,9 @@
         </Col>
         <Col class="card" :span="8" style="max-height: 560px;overflow: auto">
           <Timeline>
-            <TimelineItem>
-              <p class="timeline-title">20/01-20/12  鸿信视频分析系统产品1.0</p>
-              <div class="departmentTag">智慧城市</div>
-              <p class="label">项目技术架构 : <span class="text">微服务架构</span></p>
-              <p class="label">应用技术 : <span class="text">视频AI分析技术</span></p>
-              <p class="label">个人工作量 : <span class="text">100/日</span></p>
+            <TimelineItem v-for="item in projects">
+              <p class="timeline-title">20/01-20/12</p>
+              <div class="departmentTag">鸿信视频分析系统产品1.0</div>
               <p class="label">工作内容 : <span class="text">带领团队设计产品功能、页面样式、交互逻辑流程；设计系统架构；负责后端交通与行人视频分析算法微服务；推动项目落地，落地集团MEC智慧文旅、DICT交通视频云等项目。</span></p>
             </TimelineItem>
           </Timeline>
@@ -78,7 +78,9 @@
 export default {
   name: "expertDetail",
   mounted() {
+    this.queryProject()
     this.initChart()
+
   },
   data(){
     return {
@@ -95,70 +97,45 @@ export default {
           align: 'center'
         },
         {
-          title: '课题名称',
-          key: '1',
+          title: '科创考评项',
+          key: 'evaluate_term',
           align: 'center'
         },
         {
-          title: '立项年份',
-          key: '2',
+          title: '科创考评细项',
+          key: 'evaluate_detail',
           align: 'center'
         },
         {
-          title: '负责人',
-          key: 'name',
-          align: 'center',
-          render: (h, params) => {
-            return h('div', [
-              h('a', {
-                style: {
-                  color: '#2B5FBE'
-                }
-              }, params.row.name)
-            ]);
-          }
-        },
-        {
-          title: '联系方式',
-          key: '3',
+          title: '科创考评单次分数档',
+          key: 'evaluation_score_level',
           align: 'center'
         },
         {
-          title: '所属部门',
-          key: '4',
+          title: '最终分数',
+          key: 'finish_percent',
           align: 'center'
         },
         {
-          title: '课题状态',
-          key: '5',
+          title: '记录人',
+          key: 'record_person',
           align: 'center'
         },
         {
-          title: '所属方向',
-          key: 'direction'   ,
-          align: 'center',
-          render: (h, params) => {
-            return h('div', [
-              h('a', {
-                style: {
-                  color: '#2B5FBE'
-                }
-              }, params.row.direction)
-            ]);
-          }
-        },
-        {
-          title: '能力类型',
-          align: 'center',
+          title: '时间',
+          align: 'if_passed',
           key: '6'
         },
-      ]
+      ],
+      projects:[]
+    }
+  },
+  computed:{
+    expert: function () {
+      return this.$route.query
     }
   },
   methods:{
-    menuClick(item){
-      this.isActive = item
-    },
     initChart(){
       let mychart = this.$echarts.init(document.getElementById('radar'))
       let option = {
@@ -251,6 +228,45 @@ export default {
         ]
       };
       mychart.setOption(option)
+    },
+    queryProject(){
+      this.$axios.post('/sdata/rest/dataservice/rest/orchestration/b7b25978-63a8-4cc3-b8af-4b2ab87661c6', {
+        "param": {
+          "expertId": this.$route.query.id
+        }
+      })
+          .then((response)=>{
+            this.projects = response.data.result.evaluate
+           console.log(response)
+          })
+    },
+    queryScore(){
+      this.$axios.post('/sdata/rest/service/dataapi/rest/26f3df4c-1916-46c9-ba0d-030f14eebf80', {
+        "key": "apikey",
+        "expertId": this.$route.query.id
+      })
+      .then((response)=>{
+        let arr = JSON.parse(JSON.stringify(response.data.result))
+        arr.forEach((item)=>{
+          this.$axios.post('/sdata/rest/service/dataapi/rest/26f3df4c-1916-46c9-ba0d-030f14eebf80', {
+            "param": {
+              "expertId": item.evaluate_term
+            }
+          }).then((res)=>{
+
+          })
+        })
+        arr.forEach((item)=>{
+          this.$axios.post('/sdata/rest/service/dataapi/rest/26f3df4c-1916-46c9-ba0d-030f14eebf80', {
+            "param": {
+              "expertId": item. evaluate_detail
+            }
+          }).then((res)=>{
+
+          })
+        })
+        this.tableData = response.data.result
+      })
     }
   }
 }
@@ -268,6 +284,7 @@ export default {
     border: 3px solid #FFF;
   }
   .carouselItem{
+    width: 100%;
     .abilityDirection{
       display: flex;
       justify-content: space-between;

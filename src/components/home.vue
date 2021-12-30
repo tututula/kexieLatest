@@ -19,17 +19,17 @@
     <div class="ability">
       <p class="titles">核心能力</p>
       <div class="introduce">
-        <div>
-          <img src="/images/MaskGroup1@2x.png" width="353" height="204" alt="">
+        <div v-for="item in coreAbility.slice(0,3)">
+          <img :src="item.picture_url" width="353" height="204" alt="">
           <div class="introArea">
             <img width="64" height="64" src="/images/bigData.png" alt="">
             <div>
-              <p class="introName">大数据分析能力</p>
-              <p style="margin-top: 10px">车牌识别、图像抄表等算法精度处于行业领先水平</p>
+              <p class="introName">{{item.ability_name}}</p>
+              <p style="margin-top: 10px">{{item.ability_description}}</p>
             </div>
           </div>
         </div>
-        <div>
+<!--        <div>
           <img src="/images/MaskGroup2@2x.png" width="353" height="204" alt="">
           <div class="introArea">
             <img width="64" height="64" src="/images/textDistinguish.png" alt="">
@@ -48,7 +48,7 @@
               <p style="margin-top: 10px">供符合RESTful规范的API访问接口，兼容性强，使用方便</p>
             </div>
           </div>
-        </div>
+        </div>-->
       </div>
     </div>
     <div style="padding: 100px 0 0;text-align: center">
@@ -68,7 +68,7 @@
     </div>
     <div style="padding: 100px 0 0;text-align: center;">
       <p class="titles">历史立项课题</p>
-      <div style="padding: 0 370px;height: 450px;">
+      <div style="padding: 0 370px;height: 550px;">
         <div style="position: relative">
           <Divider style="position: absolute;top: 98%;margin: 0"/>
           <div class="historyMenu" style="display: flex;font-size: 16px;">
@@ -79,12 +79,12 @@
         </div>
         <div class="historyContent">
           <div style="height: 238px;padding: 0 67px;display: grid; grid-template-columns: repeat(3, 33.33%);grid-row-gap: 55px">
-            <div v-for="(k,i) in historyContentItem" style="text-align: left">
+            <div v-for="(k,i) in historyArr" style="text-align: left">
               <div style="display: flex;">
                 <img :src="'/images/ani'+(i+1)+'@2x.png'" width="90" height="90" alt="" style="margin-right: 20px">
                 <div style="color: #3D485D">
                   <p style="">{{k.name}}</p>
-                  <p style="font-size: 48px;font-family: YouSheBiaoTiHei-Regular, YouSheBiaoTiHei;font-weight: 400;">{{ k.value }}<span style="font-size: 16px;">个</span></p>
+                  <p style="font-size: 48px;font-family: YouSheBiaoTiHei-Regular, YouSheBiaoTiHei;font-weight: 400;">{{ k.count }}<span style="font-size: 16px;">个</span></p>
                 </div>
               </div>
             </div>
@@ -92,43 +92,43 @@
         </div>
       </div>
     </div>
-    <div class="expert" style="padding: 100px 0 0;text-align: center;position:relative;">
+    <div class="expert" style="padding: 40px 0 0;text-align: center;position:relative;">
       <p class="titles" style="position: relative;z-index: 101">科创专家展示</p>
       <div style="padding: 0 370px;text-align: center;position: relative;z-index: 100">
         <Carousel v-model="value1" loop dots="none" arrow="always" height="500">
-          <CarouselItem>
+          <CarouselItem v-for="item in expertList">
             <div class="carouselItem">
               <div style="width: 138px;height: 200px;margin-right: 30px">
                 <img src="" alt="" style="width: 100%;height: 100%">
               </div>
               <div style="flex: 1">
                 <div style="text-align: left">
-                  <span style="font-weight: bold;color: #000000;font-size: 20px">车少帅</span>
-                  <span style="font-size: 14px;margin-left: 15px">研发中心-AI工作组</span>
+                  <span style="font-weight: bold;color: #000000;font-size: 20px">{{item.name}}</span>
+                  <span style="font-size: 14px;margin-left: 15px">{{item.work_team}}</span>
                   <span style="font-size: 14px;margin-left: 170px">人才级别</span>
-                  <span style="font-size: 18px;font-weight: bold;color: #2B5FBE;margin-left: 15px">省公司专家一级</span>
+                  <span style="font-size: 18px;font-weight: bold;color: #2B5FBE;margin-left: 15px">{{item.talent_level}}</span>
                 </div>
                 <div style="display: flex;padding-top: 20px">
                   <div style="padding-right: 50px">
-                    <p style="font-size: 26px;font-weight: bold;color: #2B5FBE;">PC-4</p>
+                    <p style="font-size: 26px;font-weight: bold;color: #2B5FBE;">{{item.job_leval}}</p>
                     <p>岗位级别</p>
                   </div>
                   <div class="abilityDirection" style="width: 196px;text-align: center">
                     <div>
-                      <p style="font-size: 26px;font-weight: bold;color: #2B5FBE;">图像类型</p>
+                      <p style="font-size: 26px;font-weight: bold;color: #2B5FBE;">{{item.ability_type}}</p>
                       <p>能力方向</p>
                     </div>
                   </div>
                   <div style="padding-left: 50px">
-                    <p style="font-size: 26px;font-weight: bold;color: #2B5FBE;">2046</p>
+                    <p style="font-size: 26px;font-weight: bold;color: #2B5FBE;">{{item.total_score}}</p>
                     <p>总积分</p>
                   </div>
                 </div>
                 <div style="display: flex;padding: 20px 0 15px;flex-wrap: wrap">
-                  <div class="abilityTag" style="" v-for="i in 20">66rrrr6</div>
+                  <div class="abilityTag" style="" v-for="i in 20">{{item.telnet}}</div>
                 </div>
                 <div style="text-align: left">
-                  <span style="font-weight: bold;color: #000">主导科创能力 : </span><span>AI-图像视频/大数据</span>
+                  <span style="font-weight: bold;color: #000">主导科创能力 : </span><span>{{item.lead_project}}</span>
                 </div>
               </div>
             </div>
@@ -157,6 +157,9 @@ export default {
     value1:0,
     value2:0,
     isActive: 2021,
+    coreAbility:[],
+    historyArr:[],
+    expertList:[],
     historyMenuItem:[
         2021,
         2020,
@@ -191,9 +194,45 @@ export default {
     ]
   }
   },
+  created() {
+    this.queryAbilityList()
+    this.queryHistory()
+  },
   methods:{
     historyMenuClick(item){
       this.isActive = item
+      this.queryHistory()
+    },
+    queryAbilityList(){
+      this.$axios.post('/sdata/rest/service/dataapi/rest/438f61e0-1a38-4a26-9199-01d4671359b1', {
+
+      })
+      .then((res)=>{
+          let arr = res.data.result.filter((item)=>{
+            return item.show_flag === '是'
+          })
+        this.coreAbility = arr
+      })
+    },
+    queryHistory(){
+      this.$axios.post('/sdata/rest/dataservice/rest/orchestration/578a15a9-7c10-492c-8670-ff5296e4de53', {
+        "param": {
+          "year": this.isActive
+        }
+      })
+          .then((res)=>{
+            this.historyArr = res.data.result.result
+          })
+    },
+    queryExpert(){
+      this.$axios.post('/sdata/rest/service/dataapi/rest/491453fc-08a8-4daa-b282-7b49b077175e', {
+      })
+          .then((res)=>{
+            let arr = res.data.result.filter((item)=>{
+              return item.show_flag === '是'
+            })
+            this.expertList = arr
+          })
     }
   }
 }
@@ -307,6 +346,7 @@ export default {
   padding: 60px 40px;
 }
 .expert{
+  height: 800px;
   ::v-deep .ivu-carousel-arrow{
     background: #FFF;
     color: #91aedd;

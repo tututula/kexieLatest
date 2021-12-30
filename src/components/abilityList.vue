@@ -12,13 +12,13 @@
           <li :class="{activeMenu: activeMenu === item.name}" v-for="item in categoryBtn" @click="chooseMenu(item)">{{ item.name }}</li>
         </ul>
       </div>
-      <div style="padding: 20px 0 0 20px;flex: 1;position: relative;max-height: 1090px;overflow: auto">
+      <div :class="{isOverflow: !detailShow}" style="padding: 20px 0 0 20px;flex: 1;position: relative;max-height: 1090px;">
         <div v-if="!detailShow" class="card" style="width:99%;height: 251px;color: #666" v-for="(item, index) in list">
           <div style="display: flex">
             <img :src="item.picture_url" alt="" width="303" height="191" style="margin-right: 24px">
             <div style="flex: 1;position: relative">
               <div style="display: flex;justify-content: space-between;align-items: center">
-                <p style="font-weight: bold;color: #181818;">{{ item.ability_name }} <span style="color:#00D856;">{{ item.ability_level }}</span></p>
+                <p style="font-weight: bold;color: #181818;">{{ item.ability_name }} <span style="color:#00D856;">{{ item.version }}</span></p>
                 <Rate
                     v-model="item.ability_level"
                     disabled
@@ -27,13 +27,13 @@
                 </Rate>
               </div>
               <div style="display: grid;grid-template-columns: repeat(3, 1fr);margin-top: 10px">
-                <p>负责人 : <span style="color: #2B5FBE;font-weight: bold">陈思洋</span></p>
+<!--                <p>负责人 : <span style="color: #2B5FBE;font-weight: bold">陈思洋</span></p>-->
                 <p>复用次数 : <span>{{ item.repeat_use_counts }}</span></p>
                 <p>提供形式 : <span>{{ item.provider_type }}</span></p>
               </div>
-              <div>
+<!--              <div>
                 <p style="white-space: normal"> 落地案例 : <span style="margin-right: 10px;color: #2B5FBE;font-weight: bold">宿迁无人机平台</span></p>
-              </div>
+              </div>-->
               <p style="margin: 12px 0;width: 100%;height: 60px;overflow: hidden;text-overflow:ellipsis;word-break: break-all;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 2;">
                 {{ item.ability_description }}
               </p>
@@ -46,8 +46,8 @@
             <img src="" alt="" width="303" height="191">
             <div class="topArea" style="margin-left: 45px;flex: 1;display: grid;grid-template-columns: 2fr 1fr">
               <p>能力名称 : <span>{{detail.ability_name}}</span></p>
-              <p style="text-align: right">版本号 : <span style="color: #00D856">V2.0</span></p>
-              <p>所属方向 : <span>{{}}</span></p>
+              <p style="text-align: right">版本号 : <span style="color: #00D856">{{detail.version}}</span></p>
+              <p>所属方向 : <span>{{detail.direction}}</span></p>
               <p  style="text-align: right">负责人 : <span style="color: #2B5FBE"><a href="" style="color: #2B5FBE">{{detail.expert.expertName}}</a></span></p>
               <p>复用次数 : <span>{{detail.repeat_use_counts}}</span></p>
               <p  style="text-align: right">提供形式 : <span>{{detail.provider_type}}</span></p>
@@ -114,7 +114,7 @@ export default {
       ],
       list:[],
       detail: {
-      }
+      },
     }
   },
   created() {
@@ -151,6 +151,13 @@ export default {
       .then((response)=>{
         this.detail.project = response.data.result.project
       })
+      this.$axios.post('/sdata/rest/service/dataapi/rest/c52b2173-5e65-4bb6-8676-f05a65e58ceb', {
+        "parent_id": item.id
+      })
+      .then((response)=>{
+        this.detail.direction = response.data.result[0].name
+      })
+
     },
     hideDetail(){
       this.detailShow = false
@@ -228,7 +235,7 @@ export default {
       top: 20px;
       position: absolute;
       padding: 20px 20px;
-      width: 100%;
+      width: 99%;
       height: ~"calc(100% - 20px)";
       background: linear-gradient(167deg, #F4F6F9 0%, #FFFFFF 100%);
       box-shadow: 8px 8px 22px -7px rgba(62, 63, 66, 0.33000001311302185);
@@ -253,6 +260,9 @@ export default {
           cursor: pointer;
         }
       }
+    }
+    .isOverflow{
+      overflow: auto;
     }
   }
 </style>

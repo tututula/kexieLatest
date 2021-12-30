@@ -5,7 +5,7 @@
         <div style="display: flex;align-items: center">
           <p>科创平台</p>
           <ul>
-            <li v-for="item in menu" ><router-link :to="{path: item.url, query:{ name: item.name }}">{{ item.name }}</router-link></li>
+            <li v-for="item in menu" ><router-link :to="{path: item.url, query:{ pageName: item.name }}">{{ item.name }}</router-link></li>
           </ul>
         </div>
 <!--        <div style="display: flex;align-items: center;float: right">

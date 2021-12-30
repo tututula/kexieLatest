@@ -1,7 +1,7 @@
 <template>
   <div class="page">
     <div class="nameBg" :style="{background: `url('${headerBgUrl}') no-repeat`}">
-      <p class="pageName">{{ this.$route.query.name }}</p>
+      <p class="pageName">{{ this.$route.query.pageName }}</p>
       <div class="nameBgContent"></div>
     </div>
     <div style="background: url('/images/contentBg.png') no-repeat ;background-clip:padding-box;background-origin:padding-box;background-size: cover;background-position-y: 78px">
@@ -27,13 +27,13 @@ export default {
   },
   computed:{
     headerBgUrl: function () {
-      if(this.$route.query.name === '能力图谱'){
+      if(this.$route.query.pageName === '能力图谱'){
         return '/images/abilityAtlasBg.png'
-      } else if (this.$route.query.name === '能力清单') {
+      } else if (this.$route.query.pageName === '能力清单') {
         return '/images/abilityListBg.png'
-      } else if (this.$route.query.name === '课题展示') {
+      } else if (this.$route.query.pageName === '课题展示') {
         return '/images/projectBg.png'
-      } else if (this.$route.query.name === '科创专家') {
+      } else if (this.$route.query.pageName === '科创专家') {
         return '/images/zhuanjiaBg.png'
       }
     }

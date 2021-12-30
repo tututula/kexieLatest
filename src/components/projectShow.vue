@@ -17,26 +17,29 @@
       </div>
       <div style="padding: 20px 0">
         所属方向 :
-      <RadioGroup v-model="formData.direction" type="button" button-style="solid">
+      <RadioGroup v-model="formData.direction" type="button" button-style="solid" @on-change="queryList">
         <Radio v-for="item in categoryBtn" :label="item.id" border>{{item.name}}</Radio>
       </RadioGroup>
       </div>
       <div style="display: flex">
         <div>负责人 :
-          <Select v-model="formData.personInChargeValue" style="width:272px" clearable>
+          <Select v-model="formData.personInChargeValue" style="width:272px" clearable @on-change="queryList">
             <Option v-for="item in personInCharge" :value="item.id" :key="item.value">{{ item.name }}</Option>
           </Select>
         </div>
         <div style="margin-left: 30px">能力类型 :
-          <Select v-model="model1" style="width:272px">
-          <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-        </Select></div>
+          <Select v-model="formData.abilityType" style="width:272px" clearable @on-change="queryList">
+            <Option :value="'API接口'">API接口</Option>
+            <Option :value="'SDK'">SDK</Option>
+            <Option :value="'平台'">平台</Option>
+          </Select>
+        </div>
       </div>
       <div class="table">
         <Table :data="tableData" :columns="tableColumns" stripe></Table>
         <div style="margin: 30px 0 0;overflow: hidden">
           <div style="float: right;">
-            <Page :total="total" :current="page" @on-change="changePage" show-elevator show-sizer show-total ></Page>
+            <Page :total="total" :current="formData.page"  @on-change="changePage($event,'page')" @on-page-size-change="changePage($event,'pageSize')" show-elevator show-sizer show-total ></Page>
           </div>
         </div>
       </div>
@@ -50,8 +53,7 @@ export default {
   data(){
     return {
       formItem:{},
-      isActive: 2021,
-      page:1,
+      isActive: '2021',
       total:0,
       categoryBtn:[
         {
@@ -84,31 +86,27 @@ export default {
         }
       ],
       menuItem:[
-        2021,
-        2020,
-        2019,
-        2018
+        '2021',
+        '2020',
+        '2019',
+        '2018'
       ],
       tableData:[
-        {
-          name: 'John Brown',
-          direction: 'AI'
-        },
       ],
       tableColumns:[
         {
           title: '课题名称',
-          key: '1',
+          key: 'subject_name',
           align: 'center'
         },
         {
           title: '立项年份',
-          key: '2',
+          key: 'setup_time',
           align: 'center'
         },
         {
           title: '负责人',
-          key: 'name',
+          key: 'manager_name',
           align: 'center',
           render: (h, params) => {
             return h('div', [
@@ -122,17 +120,17 @@ export default {
         },
         {
           title: '联系方式',
-          key: '3',
+          key: 'mobile',
           align: 'center'
         },
         {
           title: '所属部门',
-          key: '4',
+          key: 'department',
           align: 'center'
         },
         {
           title: '课题状态',
-          key: '5',
+          key: 'subject_state',
           align: 'center'
         },
         {
@@ -152,15 +150,78 @@ export default {
         {
           title: '能力类型',
           align: 'center',
-          key: '6'
+          key: 'provide_type'
+        },
+      ],
+      tableColumns1:[
+        {
+          title: '课题名称',
+          key: 'subject_name',
+          align: 'center'
+        },
+        {
+          title: '立项年份',
+          key: 'setup_time',
+          align: 'center'
+        },
+        {
+          title: '负责人',
+          key: 'manager_name',
+          align: 'center',
+          render: (h, params) => {
+            return h('div', [
+              h('a', {
+                style: {
+                  color: '#2B5FBE'
+                }
+              }, params.row.name)
+            ]);
+          }
+        },
+        {
+          title: '联系方式',
+          key: 'mobile',
+          align: 'center'
+        },
+        {
+          title: '所属部门',
+          key: 'department',
+          align: 'center'
+        },
+        {
+          title: '课题状态',
+          key: 'subject_state',
+          align: 'center'
+        },
+        {
+          title: '所属方向',
+          key: 'direction'   ,
+          align: 'center',
+          render: (h, params) => {
+            return h('div', [
+              h('a', {
+                style: {
+                  color: '#2B5FBE'
+                }
+              }, params.row.direction)
+            ]);
+          }
+        },
+        {
+          title: '能力类型',
+          align: 'center',
+          key: 'provide_type'
         },
       ],
       personInCharge:[],
       directionList:[],
       formData:{
         personInChargeValue:'',
-        year: 2021,
+        year: '2021',
         direction:'',
+        abilityType: '',
+        page:1,
+        pageSize:10
       }
     }
   },
@@ -171,23 +232,44 @@ export default {
     menuClick(item){
       this.isActive = item
       this.formData.year = item
+      this.queryList()
     },
     queryList(){
-      this.$axios.post('/sdata/rest/service/dataapi/rest/7679c6b3-a2fe-4fd9-b201-b61470bb0b72', {
-          "key": "apikey",
-          "pageNum": "1",
-          "pageSize": "20",
-          "manager_name": "",
-          "provide_type": "",
-          "setup_time": "",
-          "subject_name": "",
-          "id": "",
-          "direction": "",
-          "department": ""
+      let obj = {
+        "key": "apikey",
+        "pageNum": "1",
+        "pageSize": "20",
+        "manager_id": this.formData.personInChargeValue || '',
+        "provide_type": this.formData.abilityType || '',
+        "setup_time": this.formData.year,
+        "subject_name": "",
+        "id": "",
+        "direction": this.formData.direction,
+        "department": ""
+      }
+      Promise.all([
+        this.$axios.post('/sdata/rest/service/dataapi/rest/7679c6b3-a2fe-4fd9-b201-b61470bb0b72', obj),
+        this.queryDirection()
+      ]).then((res)=>{
+        this.total = res[0].data.result.length
+        let dataFinal =  res[0].data.result.map((item)=>{
+          this.categoryBtn.forEach((i)=>{
+            if(i.id === item.direction){
+              item.direction = i.name
+            }
+          })
+          this.personInCharge.forEach((j)=>{
+            if(j.id === item.manager_id){
+              item.manager_id = j.name
+            }
+          })
+          return item
+        })
+        this.tableData = dataFinal
       })
     },
     queryPersonInCharge(){
-      this.$axios.post('/sdata/rest/dataservice/rest/orchestration/e91fc804-6fc6-4a23-8cdd-257c80e8d2c2', {
+      return this.$axios.post('/sdata/rest/dataservice/rest/orchestration/e91fc804-6fc6-4a23-8cdd-257c80e8d2c2', {
         "param": {
           "year": this.formData.year
         }
@@ -205,10 +287,18 @@ export default {
       })
 
     },
-    init(){
+    changePage(e,type){
+      if(type === 'page'){
+        this.formData.page = e
+      } else if(type === 'pageSize'){
+        this.formData.pageSize = e
+      }
       this.queryList()
-      this.queryPersonInCharge()
-      this.queryDirection()
+    },
+    init(){
+      this.queryPersonInCharge().then(()=>{
+        this.queryList()
+      })
     }
   }
 }
