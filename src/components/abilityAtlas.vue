@@ -16,7 +16,7 @@
       <div style="height:1px;box-shadow: 0 10px 20px #000000;position: absolute;top: 0;width: 100%;"></div>
       <div style="width: 100%;height: 100%;display: flex;margin-top: 25px">
         <div class="menu" style="width: 294px;height: 100%;padding: 46px 0 0 0">
-          <ul>
+          <ul style="height:100%;overflow: auto">
             <li :class="{activeMenu: activeSecondMenu === item.name}" v-for="(item, index) in secondMenu" @click="secondMenuQuery(item.name,item.id)">{{item.name}}</li>
           </ul>
         </div>

@@ -2,17 +2,10 @@
   <div style="background-image: url('/images/homeability.png');background-size: 100% 1434px;background-repeat: no-repeat">
     <Carousel class="header" v-model="value1" loop :height="456" style="margin-top: 82px">
       <CarouselItem>
-        <div class="carousel" style="background-image: url('/images/Group912@2x.png')">
+        <div class="carousel" style="background-image: url('/images/homeBanner1.png')">
           <p style="font-size: 36px;font-weight: 300;color: #111111;">鸿信科创平台上线</p>
           <p style="width: 610px;font-size: 20px;font-weight: 300;color: #666666;">平台通过汇聚工业行业的机器视觉解决方案、应用及算法，为客户提供视觉识别，视觉定位，尺寸测量，外观检测等</p>
           <Button type="primary" style="width: 118px;height: 40px;margin-top: 50px;background: #2B5FBE">立即体验</Button>
-        </div>
-      </CarouselItem>
-      <CarouselItem>
-        <div class="carousel" style="background-image: url('/images/Group912@2x.png')">
-          <div >
-
-          </div>
         </div>
       </CarouselItem>
     </Carousel>

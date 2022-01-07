@@ -13,10 +13,10 @@
                   <div style="display: flex;justify-content: space-between">
                     <div>
                       <span style="font-weight: bold;color: #000000;font-size: 20px">zzz{{ expert.name }}</span>
-                      <span style="font-size: 14px;margin-left: 15px">1{{expert.work_team}}</span></div>
+                      <span style="font-size: 14px;margin-left: 15px">{{expert.work_team}}</span></div>
                     <div>
                       <span style="font-size: 14px;margin-left: 170px">人才级别</span>
-                      <span style="font-size: 18px;font-weight: bold;color: #2B5FBE;margin-left: 15px">1{{expert.talent_level}}</span>
+                      <span style="font-size: 18px;font-weight: bold;color: #2B5FBE;margin-left: 15px">{{expert.talent_level}}</span>
                     </div>
                   </div>
                   <div style="display: flex;padding-top: 20px">
