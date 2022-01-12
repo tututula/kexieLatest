@@ -9,7 +9,7 @@
     </div>
     <div class="content">
       <div class="card" v-for="i in expertList" @click="showDetail(i)">
-        <div style="width: 150px;height: 117px;background: linear-gradient(220deg, #3157DE 0%, #6BB6E0 100%);border-radius: 35px;position: absolute;top: -74px;right: -33px"></div>
+        <div style="width: 300px;height: 117px;background: linear-gradient(220deg, #3157DE 0%, #6BB6E0 100%);border-radius: 35px;position: absolute;top: -74px;right: -150px"></div>
         <p style="position:absolute;right: 0;padding: 10px 8px;color: #FFF">{{ i.talent_level }}</p>
         <div style=" padding: 15px;width: 100%;height: 100%">
           <p class="name">{{ i.name }}</p>
@@ -78,8 +78,8 @@ export default {
       this.queryExpert()
     },
     showDetail(item){
-      let query = Object.assign({pageName:'科创专家'},item)
-      this.$router.push({name:'expertDetail',query:query})
+     // let query = Object.assign({pageName:'科创专家'},item)
+      this.$router.push({name:'expertDetail',query:{pageName:'科创专家'},params: item})
     },
     queryExpert(){
       this.$axios.post('/sdata/rest/service/dataapi/rest/491453fc-08a8-4daa-b282-7b49b077175e', {

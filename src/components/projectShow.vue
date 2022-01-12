@@ -1,7 +1,7 @@
 <template>
   <div class="childPage" style="">
     <div style="height: 78px;display: flex;align-items: end;justify-content: space-between;background: #FFF;padding: 0 50px">
-      <Input search placeholder="搜索产品名称、缩写、功能名称（如：云服务" style="width: 738px;height: 36px"/>
+      <Input search v-model.trim="serchCondition" @on-enter="queryList()" placeholder="搜索产品名称、缩写、功能名称（如：云服务" style="width: 738px;height: 36px"/>
       <div style="height: 36px;flex: 1;display: flex;align-items: center;margin-left: 20px">
         <Icon type="md-flame" color="#f85f52" />
       </div>
@@ -24,7 +24,7 @@
       <div style="display: flex">
         <div>负责人 :
           <Select v-model="formData.personInChargeValue" style="width:272px" clearable @on-change="queryList">
-            <Option v-for="item in personInCharge" :value="item.id" :key="item.value">{{ item.name }}</Option>
+            <Option v-for="item in personInCharge" :value="item.manager_id" :key="item.value">{{ item.name }}</Option>
           </Select>
         </div>
         <div style="margin-left: 30px">能力类型 :
@@ -53,6 +53,7 @@ export default {
   data(){
     return {
       formItem:{},
+      serchCondition: '',
       isActive: '2021',
       total:0,
       categoryBtn:[
@@ -82,7 +83,7 @@ export default {
         },
         {
           name: '信创与信息安全',
-          id: 'a83f8353601d49a8887f26e9709f81c2'
+          id: 'e78019fda4e54918ba4bea21d7c46720'
         }
       ],
       menuItem:[
@@ -106,15 +107,30 @@ export default {
         },
         {
           title: '负责人',
-          key: 'manager_name',
+          key: 'manager_id',
           align: 'center',
           render: (h, params) => {
             return h('div', [
               h('a', {
                 style: {
                   color: '#2B5FBE'
-                }
-              }, params.row.name)
+                },
+                on: {
+                  click: () => {
+                    let id = ''
+                    this.personInCharge.forEach((j)=>{
+                      if(j.name ===  params.row.manager_id){
+                        id = j.manager_id
+                      }
+                    })
+                    this.$axios.post('/sdata/rest/service/dataapi/rest/491453fc-08a8-4daa-b282-7b49b077175e', {id: id})
+                        .then(res => {
+                          this.$router.push({ name: 'expertDetail',query:{pageName:'科创专家'},params: res.data.result[0]})
+                        })
+
+                  }
+                },
+              }, params.row.manager_id)
             ]);
           }
         },
@@ -136,76 +152,7 @@ export default {
         {
           title: '所属方向',
           key: 'direction'   ,
-          align: 'center',
-          render: (h, params) => {
-            return h('div', [
-              h('a', {
-                style: {
-                  color: '#2B5FBE'
-                }
-              }, params.row.direction)
-            ]);
-          }
-        },
-        {
-          title: '能力类型',
-          align: 'center',
-          key: 'provide_type'
-        },
-      ],
-      tableColumns1:[
-        {
-          title: '课题名称',
-          key: 'subject_name',
           align: 'center'
-        },
-        {
-          title: '立项年份',
-          key: 'setup_time',
-          align: 'center'
-        },
-        {
-          title: '负责人',
-          key: 'manager_name',
-          align: 'center',
-          render: (h, params) => {
-            return h('div', [
-              h('a', {
-                style: {
-                  color: '#2B5FBE'
-                }
-              }, params.row.name)
-            ]);
-          }
-        },
-        {
-          title: '联系方式',
-          key: 'mobile',
-          align: 'center'
-        },
-        {
-          title: '所属部门',
-          key: 'department',
-          align: 'center'
-        },
-        {
-          title: '课题状态',
-          key: 'subject_state',
-          align: 'center'
-        },
-        {
-          title: '所属方向',
-          key: 'direction'   ,
-          align: 'center',
-          render: (h, params) => {
-            return h('div', [
-              h('a', {
-                style: {
-                  color: '#2B5FBE'
-                }
-              }, params.row.direction)
-            ]);
-          }
         },
         {
           title: '能力类型',
@@ -236,16 +183,14 @@ export default {
     },
     queryList(){
       let obj = {
-        "key": "apikey",
         "pageNum": "1",
         "pageSize": "20",
-        "manager_id": this.formData.personInChargeValue || '',
-        "provide_type": this.formData.abilityType || '',
+        "manager_id": this.formData.personInChargeValue || null,
+        "provide_type": this.formData.abilityType || null,
         "setup_time": this.formData.year,
-        "subject_name": "",
-        "id": "",
-        "direction": this.formData.direction,
-        "department": ""
+        "direction": this.formData.direction || null,
+        "department": null,
+        subject_name: this.serchCondition || null
       }
       Promise.all([
         this.$axios.post('/sdata/rest/service/dataapi/rest/7679c6b3-a2fe-4fd9-b201-b61470bb0b72', obj),
@@ -259,7 +204,7 @@ export default {
             }
           })
           this.personInCharge.forEach((j)=>{
-            if(j.id === item.manager_id){
+            if(j.manager_id === item.manager_id){
               item.manager_id = j.name
             }
           })

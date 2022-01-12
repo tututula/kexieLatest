@@ -1,7 +1,7 @@
 <template>
   <div class="childPage" style="">
     <div style="height: 78px;display: flex;align-items: end;justify-content: space-between;background: #FFF;padding: 0 50px">
-      <Input search placeholder="搜索产品名称、缩写、功能名称（如：云服务" style="width: 738px;height: 36px"/>
+      <Input v-model.trim="serchCondition" search placeholder="搜索产品名称、缩写、功能名称（如：云服务" @on-enter="chooseMenu({ability_name: serchCondition, name: activeMenu, id: activeMenuId})" style="width: 738px;height: 36px"/>
       <div style="height: 36px;flex: 1;display: flex;align-items: center;margin-left: 20px">
         <Icon type="md-flame" color="#f85f52" />
       </div>
@@ -26,7 +26,7 @@
                 >
                 </Rate>
               </div>
-              <div style="display: grid;grid-template-columns: repeat(3, 1fr);margin-top: 10px">
+              <div style="display: grid;grid-template-columns: repeat(2, 1fr);margin-top: 10px">
 <!--                <p>负责人 : <span style="color: #2B5FBE;font-weight: bold">陈思洋</span></p>-->
                 <p>复用次数 : <span>{{ item.repeat_use_counts }}</span></p>
                 <p>提供形式 : <span>{{ item.provider_type }}</span></p>
@@ -65,7 +65,7 @@
           <div style="margin-top: 30px;display: flex;">
             <span style="margin-right: 10px">落地案例 : </span>
             <div style="display: flex;flex-wrap: wrap;flex: 1">
-              <a href="" style="margin-right: 10px;font-weight: bold;color: #2B5FBE" v-for="i in detail.project">{{i.project_name||''}}</a>
+              <a  style="margin-right: 10px;font-weight: bold;color: #2B5FBE" v-for="i in detail.project" @click="jumpTo(i.project_id)">{{i.project_name||''}}</a>
             </div>
           </div>
           <img class="back" src="/images/backbtn@2x.png" alt="" width="50" height="50" @click="hideDetail" style="">
@@ -81,7 +81,9 @@ export default {
   data(){
     return {
       detailShow:false,
+      serchCondition: '',
       activeMenu: '全部',
+      activeMenuId: '',
       categoryBtn:[
         {
           name: '全部',
@@ -109,7 +111,7 @@ export default {
         },
         {
           name: '信创与信息安全',
-          id: 'a83f8353601d49a8887f26e9709f81c2'
+          id: 'e78019fda4e54918ba4bea21d7c46720'
         }
       ],
       list:[],
@@ -121,7 +123,8 @@ export default {
     if (!this.$route.query.hasOwnProperty('detailId')) {
       this.chooseMenu({
         name: '全部',
-        id: ''
+        id: '',
+        ability_name: null
       })
     }
   },
@@ -129,19 +132,16 @@ export default {
     showDetail (item) {
       this.detailShow = true
       this.detail = item
-      this.detail.ability_level = Number(this.detail.ability_level)
-      this.detail.expert = {
-        expertName:'',
-        expertId:''
-      }
+      this.detail.expert = {}
       this.$axios.post('/sdata/rest/dataservice/rest/orchestration/9c9f2640-846b-461d-8b2d-d45e4ffe9671', {
         param:{
           "abilityId": item.id
         }
       })
       .then((response)=>{
-        this.detail.expert.expertName =  response.data.result.expert.length === 0 ? '' : response.data.result.expert[0].expertName
-        this.detail.expert.expertId =   response.data.result.expert.length === 0 ? '' : response.data.result.expert[0].expertId
+        this.$set(this.detail.expert, 'expertName', response.data.result.expert.length === 0 ? '' : response.data.result.expert[0].expertName)
+        this.$set(this.detail.expert, 'expertId', response.data.result.expert.length === 0 ? '' : response.data.result.expert[0].expertId)
+        this.$forceUpdate()
       })
       this.$axios.post('/sdata/rest/dataservice/rest/orchestration/1bdd62a2-a26e-40b7-96b2-791a56938d04', {
         param:{
@@ -150,12 +150,14 @@ export default {
       })
       .then((response)=>{
         this.detail.project = response.data.result.project
+        this.$forceUpdate()
       })
       this.$axios.post('/sdata/rest/service/dataapi/rest/c52b2173-5e65-4bb6-8676-f05a65e58ceb', {
-        "parent_id": item.id
+        "id": item.parent_id
       })
       .then((response)=>{
         this.detail.direction = response.data.result[0].name
+        this.$forceUpdate()
       })
 
     },
@@ -163,21 +165,28 @@ export default {
       this.detailShow = false
     },
     chooseMenu(item){
-      this. hideDetail()
+      this.hideDetail()
       this.list = []
       this.activeMenu = item.name
+      this.activeMenuId = item.id
       let obj = {}
       if(item.name !== '全部'){
         obj.parent_id = item.id
       }
+      obj.ability_name = this.serchCondition || null
       this.$axios.post('/sdata/rest/service/dataapi/rest/438f61e0-1a38-4a26-9199-01d4671359b1', obj)
       .then((response)=>{
-        console.log(response);
-        this.list = response.data.result
+        this.list = response.data.result.map(item => {
+          item.ability_level = item.ability_level ? parseFloat(item.ability_level.replace(/[^\d]/g,'')) : 0
+          return item
+        })
       })
       .catch(function (error) {
         console.log(error);
       });
+    },
+    jumpTo (url) {
+      return
     }
   }
 }

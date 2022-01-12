@@ -91,7 +91,7 @@ export default {
         {
           name: '信创与信息安全',
           active: false,
-          id: 'a83f8353601d49a8887f26e9709f81c2'
+          id: 'e78019fda4e54918ba4bea21d7c46720'
         }
       ],
       secondMenu:[],

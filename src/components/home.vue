@@ -46,13 +46,13 @@
     </div>
     <div style="padding: 100px 0 0;text-align: center">
       <p class="titles">落地案例</p>
-      <Carousel class="projects" v-model="value2" loop :radius-dot="true" :height="472" style="margin-top: 42px;background: #FFF">
-        <CarouselItem>
+      <Carousel class="projects" v-model="value2" loop :radius-dot="true" :height="472" style="margin-top: 42px;background: #FFF;min-height: 472px">
+        <CarouselItem v-for="i in examples">
           <div style="height: 100%;background-repeat: no-repeat;background-size: 100% 100%;background-image: url('/images/zhongxing@2x.png')">
             <div style="width: 1023px;height: 100%;float: right;padding: 80px 370px 0 63px;text-align: left;color:#FFF;">
-              <img width="186" height="60" src="/images/zhongxingLogo@2x.png" alt="">
-              <p style="font-size: 24px;font-weight: 400;margin: 24px 0">中兴云助力京东客服中心智能化升级</p>
-              <p style="font-size: 14px;font-weight: 400">通过行业领先的融合产品、AI技术、运营三位一体的整体方案，赋能京东自营客服中心与平台生态海量商家，覆盖京东热线、APP多个咨询渠道，解决大促和高峰期间顾客咨询排队久的问题，提升人工坐席接待效率。</p>
+              <img v-if="i.picture_url" width="186" height="60" src="/images/zhongxingLogo@2x.png" alt="">
+              <p style="font-size: 24px;font-weight: 400;margin: 24px 0">{{ i.project_name }}</p>
+              <p style="font-size: 14px;font-weight: 400">{{i.project_description}}</p>
               <Button type="default" ghost style="margin-top: 50px">查看案例</Button>
             </div>
           </div>
@@ -118,7 +118,7 @@
                   </div>
                 </div>
                 <div style="display: flex;padding: 20px 0 15px;flex-wrap: wrap">
-                  <div class="abilityTag" style="" v-for="i in 20">{{item.telnet}}</div>
+<!--                  <div class="abilityTag" style="" >{{item.telnet}}</div>-->
                 </div>
                 <div style="text-align: left">
                   <span style="font-weight: bold;color: #000">主导科创能力 : </span><span>{{item.lead_project}}</span>
@@ -153,6 +153,39 @@ export default {
     coreAbility:[],
     historyArr:[],
     expertList:[],
+    examples:[],
+    categoryBtn:[
+      {
+        name: '流媒体',
+        active: true,
+        id: '10735e3e0bc44627998c76cbf72f8fdf'
+      },
+      {
+        name: 'AI',
+        active: false,
+        id: '954be9c42f6d43aab2fa5f38f91ba2b4'
+      },
+      {
+        name: '大数据',
+        active: false,
+        id: 'df8bb75009544683bcadf4a8bd1b112e'
+      },
+      {
+        name: '通用技术',
+        active: false,
+        id: '920b38ddb2044c7dbd7f4e6c26c2319b'
+      },
+      {
+        name: '云网融合',
+        active: false,
+        id: 'a6b3590474774d688ab789e9d2cba8c6'
+      },
+      {
+        name: '信创与信息安全',
+        active: false,
+        id: 'e78019fda4e54918ba4bea21d7c46720'
+      }
+    ],
     historyMenuItem:[
         2021,
         2020,
@@ -190,6 +223,8 @@ export default {
   created() {
     this.queryAbilityList()
     this.queryHistory()
+    this. queryExpert()
+    this.queryExample()
   },
   methods:{
     historyMenuClick(item){
@@ -198,13 +233,10 @@ export default {
     },
     queryAbilityList(){
       this.$axios.post('/sdata/rest/service/dataapi/rest/438f61e0-1a38-4a26-9199-01d4671359b1', {
-
+        show_flag: '是'
       })
       .then((res)=>{
-          let arr = res.data.result.filter((item)=>{
-            return item.show_flag === '是'
-          })
-        this.coreAbility = arr
+        this.coreAbility = res.data.result.slice(0,3)
       })
     },
     queryHistory(){
@@ -224,9 +256,24 @@ export default {
             let arr = res.data.result.filter((item)=>{
               return item.show_flag === '是'
             })
-            this.expertList = arr
+            this.expertList = arr.map(item => {
+              this.categoryBtn.forEach(i => {
+                if (i.id === item.ability_type) {
+                  item.ability_type = i.name
+                }
+              })
+              return item
+            })
           })
-    }
+    },
+    queryExample(){
+      this.$axios.post('/sdata/rest/service/dataapi/rest/a39ec45e-0a52-4030-8c51-3fc9750a4a6e', {
+        show_flag: '是'
+      })
+          .then((res)=>{
+            this.examples = res.data.result
+          })
+    },
   }
 }
 </script>

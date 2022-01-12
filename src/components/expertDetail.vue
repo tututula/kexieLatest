@@ -12,7 +12,7 @@
                 <div style="flex: 1">
                   <div style="display: flex;justify-content: space-between">
                     <div>
-                      <span style="font-weight: bold;color: #000000;font-size: 20px">zzz{{ expert.name }}</span>
+                      <span style="font-weight: bold;color: #000000;font-size: 20px">{{ expert.name }}</span>
                       <span style="font-size: 14px;margin-left: 15px">{{expert.work_team}}</span></div>
                     <div>
                       <span style="font-size: 14px;margin-left: 170px">人才级别</span>
@@ -45,11 +45,9 @@
           <Row class="card" style="margin-top: 15px;height: 300px;padding: 10px 40px">
             <Col :span="10">
               <p class="title">主导科创能力</p>
-              <p class="label">人才级别 : <span class="text">{{expert.talent_level}}</span></p>
-              <p class="label">科创能力 : <span class="text">a</span></p>
-              <p class="label">行业专家 : <span class="text">a</span></p>
+              <p class="label"><span class="text">{{expert.lead_project}}</span></p>
               <p class="title">获奖情况</p>
-              <p class="label" >{{expert.prizes}}</p>
+              <p class="label" >{{expert.prizes || '无'}}</p>
             </Col>
             <Col :span="14">
               <div id="radar" style="width: 100%;height: 100%"></div>
@@ -77,10 +75,25 @@
 <script>
 export default {
   name: "expertDetail",
+  created() {
+    let expertData = localStorage.getItem('expertData')
+    if(!expertData) {
+      this.expert = this.$route.params
+      localStorage.setItem('expertData', JSON.stringify(this.$route.params))
+    } else {
+      this.expert = JSON.parse(expertData)
+    }
+    this.menuItem.forEach(i => {
+      if (i.id === this.expert.ability_type) {
+        this.expert.ability_type = i.name
+      }
+    })
+  },
   mounted() {
     this.queryProject()
     this.initChart()
-
+    this.queryScore()
+    this.queryEchartData()
   },
   data(){
     return {
@@ -123,16 +136,45 @@ export default {
         },
         {
           title: '时间',
-          align: 'if_passed',
-          key: '6'
+          align: 'center',
+          key: 'create_time',
+          render: (h, params) => {
+            let time =  this.$moment(new Date(params.row.create_time)).format('yyyy-MM-DD HH:mm:ss')
+            console.log(time)
+            return h('div', [
+              h('p', time)
+            ]);
+          }
         },
       ],
-      projects:[]
-    }
-  },
-  computed:{
-    expert: function () {
-      return this.$route.query
+      projects:[],
+      expert: {},
+      menuItem:[
+        {
+          name: '流媒体',
+          id: '10735e3e0bc44627998c76cbf72f8fdf'
+        },
+        {
+          name: 'AI',
+          id: '954be9c42f6d43aab2fa5f38f91ba2b4'
+        },
+        {
+          name: '大数据',
+          id: 'df8bb75009544683bcadf4a8bd1b112e'
+        },
+        {
+          name: '通用技术',
+          id: '920b38ddb2044c7dbd7f4e6c26c2319b'
+        },
+        {
+          name: '云网融合',
+          id: 'a6b3590474774d688ab789e9d2cba8c6'
+        },
+        {
+          name: '信创与信息安全',
+          id: 'a83f8353601d49a8887f26e9709f81c2'
+        }
+      ],
     }
   },
   methods:{
@@ -241,33 +283,37 @@ export default {
           })
     },
     queryScore(){
-      this.$axios.post('/sdata/rest/service/dataapi/rest/26f3df4c-1916-46c9-ba0d-030f14eebf80', {
-        "key": "apikey",
-        "expertId": this.$route.query.id
+      Promise.all([this.$axios.post('/sdata/rest/service/dataapi/rest/26f3df4c-1916-46c9-ba0d-030f14eebf80', {
+        "expert_id": this.expert.id,
+      }), this.$axios.post('/sdata/rest/dataservice/rest/orchestration/b7b25978-63a8-4cc3-b8af-4b2ab87661c6', {
+        "param": {
+          "expertId": this.expert.id
+        }
+      })]).then(res => {
+        console.log(res)
+        let arr = JSON.parse(JSON.stringify(res[0].data.result))
+        let scoreDetailNameArr = res[1].data.result.evaluate
+        arr.forEach((item) => {
+          scoreDetailNameArr.forEach(i => {
+            if (item.id === i.id) {
+              item.evaluate_term = i.evaluate_term
+              item.evaluate_detail = i.evaluate_detail
+            }
+          })
+        })
+        this.tableData = arr
       })
-      .then((response)=>{
-        let arr = JSON.parse(JSON.stringify(response.data.result))
-        arr.forEach((item)=>{
-          this.$axios.post('/sdata/rest/service/dataapi/rest/26f3df4c-1916-46c9-ba0d-030f14eebf80', {
-            "param": {
-              "expertId": item.evaluate_term
-            }
-          }).then((res)=>{
-
-          })
-        })
-        arr.forEach((item)=>{
-          this.$axios.post('/sdata/rest/service/dataapi/rest/26f3df4c-1916-46c9-ba0d-030f14eebf80', {
-            "param": {
-              "expertId": item. evaluate_detail
-            }
-          }).then((res)=>{
-
-          })
-        })
-        this.tableData = response.data.result
+    },
+    queryEchartData () {
+      this.$axios.post('/sdata/rest/service/dataapi/rest/f7f008f5-2233-489b-b708-e7a55e640447', {
+        "uesr_name": this.expert.name
+      }).then(res => {
+        console.log(res)
       })
     }
+  },
+  beforeDestroy() {
+    localStorage.removeItem('expertData')
   }
 }
 </script>
