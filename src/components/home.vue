@@ -236,7 +236,11 @@ export default {
         show_flag: '是'
       })
       .then((res)=>{
+        res.data.result.forEach(item => {
+          item.picture_url = JSON.parse(item.picture_url)[0].url
+        })
         this.coreAbility = res.data.result.slice(0,3)
+        console.log(  this.coreAbility)
       })
     },
     queryHistory(){
