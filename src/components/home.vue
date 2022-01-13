@@ -88,7 +88,7 @@
     <div class="expert" style="padding: 40px 0 0;text-align: center;position:relative;">
       <p class="titles" style="position: relative;z-index: 101">科创专家展示</p>
       <div style="padding: 0 370px;text-align: center;position: relative;z-index: 100">
-        <Carousel v-model="value1" loop dots="none" arrow="always" height="500">
+        <Carousel v-model="value1"  dots="none" arrow="always" height="500">
           <CarouselItem v-for="item in expertList">
             <div class="carouselItem">
               <div style="width: 138px;height: 200px;margin-right: 30px">
@@ -118,7 +118,9 @@
                   </div>
                 </div>
                 <div style="display: flex;padding: 20px 0 15px;flex-wrap: wrap">
-<!--                  <div class="abilityTag" style="" >{{item.telnet}}</div>-->
+                  <template v-for="(i,j) in item.abilityTags">
+                    <div v-if="j < 16" class="abilityTag" style="" :key="j">{{i.skill_name}}</div>
+                  </template>
                 </div>
                 <div style="text-align: left">
                   <span style="font-weight: bold;color: #000">主导科创能力 : </span><span>{{item.lead_project}}</span>
@@ -226,6 +228,16 @@ export default {
     this. queryExpert()
     this.queryExample()
   },
+  watch: {
+    'expertList': function () {
+      this.expertList.forEach(item=> {
+        this.queryAbilityTags(item.name).then(r => {
+          item.abilityTags = r.data.result
+          this.$forceUpdate()
+        })
+      })
+    }
+  },
   methods:{
     historyMenuClick(item){
       this.isActive = item
@@ -240,7 +252,6 @@ export default {
           item.picture_url = JSON.parse(item.picture_url)[0].url
         })
         this.coreAbility = res.data.result.slice(0,3)
-        console.log(  this.coreAbility)
       })
     },
     queryHistory(){
@@ -255,11 +266,11 @@ export default {
     },
     queryExpert(){
       this.$axios.post('/sdata/rest/service/dataapi/rest/491453fc-08a8-4daa-b282-7b49b077175e', {
+        show_flag: '是'
       })
           .then((res)=>{
-            let arr = res.data.result.filter((item)=>{
-              return item.show_flag === '是'
-            })
+            let arr = res.data.result
+            console.log( arr)
             this.expertList = arr.map(item => {
               this.categoryBtn.forEach(i => {
                 if (i.id === item.ability_type) {
@@ -269,6 +280,11 @@ export default {
               return item
             })
           })
+    },
+    queryAbilityTags (name) {
+     return this.$axios.post('/sdata/rest/service/dataapi/rest/a06185fa-d68c-4b19-a805-1016d70b83b8', {
+        "uesr_name": name
+      })
     },
     queryExample(){
       this.$axios.post('/sdata/rest/service/dataapi/rest/a39ec45e-0a52-4030-8c51-3fc9750a4a6e', {

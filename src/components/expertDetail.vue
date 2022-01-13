@@ -38,7 +38,9 @@
                 </div>
               </div>
               <div style="display: flex;padding: 20px 0 15px;flex-wrap: wrap">
-                <div class="abilityTag" style="" v-for="i in expert.telnet">{{}}</div>
+                <template v-for="(i,j) in abilityTags">
+                  <div v-if="j<16" class="abilityTag" style="" >{{i.skill_name}}</div>
+                </template>
               </div>
             </div>
           </Row>
@@ -47,7 +49,7 @@
               <p class="title">主导科创能力</p>
               <p class="label"><span class="text">{{expert.lead_project}}</span></p>
               <p class="title">获奖情况</p>
-              <p class="label" >{{expert.prizes || '无'}}</p>
+              <p class="label" v-for="i in prize">{{i.cert_name || '无'}}</p>
             </Col>
             <Col :span="14">
               <div id="radar" style="width: 100%;height: 100%"></div>
@@ -90,10 +92,12 @@ export default {
     })
   },
   mounted() {
-    this.queryProject()
-    this.initChart()
     this.queryScore()
+    this.queryPrize()
+    this.queryAbilityTags()
     this.queryEchartData()
+    this.queryProject()
+
   },
   data(){
     return {
@@ -148,6 +152,8 @@ export default {
         },
       ],
       projects:[],
+      prize:[],
+      abilityTags: [],
       expert: {},
       menuItem:[
         {
@@ -178,19 +184,21 @@ export default {
     }
   },
   methods:{
-    initChart(){
+    initChart(data){
+      let indicators = Object.keys(data[0]).map(item => {
+        return {
+          text: item
+        }
+      })
+      let optionData = Object.keys(data[0]).map(item=>{
+        return data[0][item]
+      })
       let mychart = this.$echarts.init(document.getElementById('radar'))
       let option = {
         color: ['#67F9D8', '#FFE434', '#56A3F1', '#FF917C'],
         radar: [
           {
-            indicator: [
-              {text: 'Indicator1'},
-              {text: 'Indicator2'},
-              {text: 'Indicator3'},
-              {text: 'Indicator4'},
-              {text: 'Indicator5'}
-            ],
+            indicator: indicators,
             center: ['50%', '50%'],
             radius: 80,
             startAngle: 90,
@@ -229,7 +237,7 @@ export default {
             },
             data: [
               {
-                value: [60, 5, 0.3, -100, 1500],
+                value: optionData,
                 name: 'Data B',
                 lineStyle:{
                   color:'#83D9FF'
@@ -308,7 +316,24 @@ export default {
       this.$axios.post('/sdata/rest/service/dataapi/rest/f7f008f5-2233-489b-b708-e7a55e640447', {
         "uesr_name": this.expert.name
       }).then(res => {
-        console.log(res)
+        if (res.data.result.length === 0) {
+          return
+        }
+        this.initChart(res.data.result)
+      })
+    },
+    queryPrize () {
+      this.$axios.post('/sdata/rest/service/dataapi/rest/744aa852-7bcf-46d7-8f2b-7422defa8dbc', {
+        "uesr_name": this.expert.name
+      }).then(res => {
+        this.prize = res.data.result
+      })
+    },
+    queryAbilityTags () {
+      this.$axios.post('/sdata/rest/service/dataapi/rest/a06185fa-d68c-4b19-a805-1016d70b83b8', {
+        "uesr_name": this.expert.name
+      }).then(res => {
+        this.abilityTags = res.data.result
       })
     }
   },
