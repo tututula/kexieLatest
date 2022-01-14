@@ -40,8 +40,8 @@
               <p style="font-weight: bold;color: #2B5FBE;font-size: 16px">{{ lastMenu.ability_name }}</p>
               <p style="margin: 20px 0 40px 0;white-space: normal;word-break: break-all;color: #666;font-size: 12px">
                 {{  lastMenu.ability_description  }}</p>
-              <div style="display: grid;grid-template-columns: repeat(2, 1fr);grid-gap: 15px 10px;height: 200px;justify-items: center;padding: 10px">
-                <div class="btn">{{ lastMenu.ability_attribution }}</div>
+              <div style="display: grid;grid-template-columns: repeat(2, 1fr);grid-template-rows: repeat(4, 1fr);;grid-gap: 10px;height: 200px;justify-items: center;padding: 10px">
+                <div class="btn" v-for="i in lastMenu.more">{{ i.ability_name }}</div>
               </div>
             </div>
           </div>
@@ -133,7 +133,10 @@ export default {
           parent_id: item.id
         })
             .then((response)=>{
-              console.log(response);
+              if (response.data.result.length === 0) {
+                this.lastMenu.more = []
+              } else this.lastMenu.more = response.data.result
+              this.$forceUpdate()
             })
             .catch(function (error) {
               console.log(error);
@@ -149,12 +152,14 @@ export default {
         parent_id: id
       })
           .then((response)=>{
-            console.log(response);
             if ( response.data.result.length === 0) {
               return this.$axios.post('/sdata/rest/service/dataapi/rest/4995a172-62d3-4066-9436-6ad777703664', {
                 parent_id: id
               })
-            } else this.thirdMenu = response.data.result
+            } else this.thirdMenu = response.data.result.map(item => {
+              item.ability_name = item.name
+              return item
+            })
           })
           .then((response)=>{
             this.thirdMenu = response.data.result

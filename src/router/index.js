@@ -19,7 +19,10 @@ const routes =  [
     },
     {
         path: '/home',
-        component: Home
+        component: Home,
+        query:{
+            pageName: '首页'
+        }
     },
     {
         path: '/page',

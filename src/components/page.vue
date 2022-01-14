@@ -44,8 +44,8 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="less">
 .page{
-  min-height: 502px;
-  margin-top: 82px!important;
+  min-height: 520px;
+  margin-top: 85px!important;
   width: 100%;
   display: flex;
   flex-direction: column;

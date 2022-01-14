@@ -1,10 +1,10 @@
 <template>
   <div class="childPage" style="">
     <div style="height: 78px;display: flex;align-items: end;justify-content: space-between;background: #FFF;padding: 0 50px">
-      <Input v-model.trim="serchCondition" search placeholder="搜索产品名称、缩写、功能名称（如：云服务" @on-enter="chooseMenu({ability_name: serchCondition, name: activeMenu, id: activeMenuId})" style="width: 738px;height: 36px"/>
-      <div style="height: 36px;flex: 1;display: flex;align-items: center;margin-left: 20px">
+      <Input v-model.trim="serchCondition" search placeholder="搜索产品名称、缩写、功能名称（如：云服务" @on-enter="chooseMenu({ability_name: serchCondition, name: activeMenu, id: activeMenuId})" style="width: 100%;height: 36px"/>
+<!--      <div style="height: 36px;flex: 1;display: flex;align-items: center;margin-left: 20px">
         <Icon type="md-flame" color="#f85f52" />
-      </div>
+      </div>-->
     </div>
     <div class="content">
       <div class="menu" style="width: 294px;height: 100%;padding: 23px 0 0 10px">
@@ -48,7 +48,7 @@
               <p>能力名称 : <span>{{detail.ability_name}}</span></p>
               <p style="text-align: right">版本号 : <span style="color: #00D856">{{detail.version}}</span></p>
               <p>所属方向 : <span>{{detail.direction}}</span></p>
-              <p  style="text-align: right">负责人 : <span style="color: #2B5FBE"><a href="" style="color: #2B5FBE">{{detail.expert.expertName}}</a></span></p>
+              <p  style="text-align: right">负责人 : <span style="color: #2B5FBE"><a href="javascript:return void(0)" style="color: #2B5FBE" @click="jumpTo(detail.expert.expertId)">{{detail.expert.expertName}}</a></span></p>
               <p>复用次数 : <span>{{detail.repeat_use_counts}}</span></p>
               <p  style="text-align: right">提供形式 : <span>{{detail.provider_type}}</span></p>
               <p>能力评级 : <span>    <Rate
@@ -65,7 +65,7 @@
           <div style="margin-top: 30px;display: flex;">
             <span style="margin-right: 10px">落地案例 : </span>
             <div style="display: flex;flex-wrap: wrap;flex: 1">
-              <a  style="margin-right: 10px;font-weight: bold;color: #2B5FBE" v-for="i in detail.project" @click="jumpTo(i.project_id)">{{i.project_name||''}}</a>
+              <a style="margin-right: 10px;font-weight: bold;color: #2B5FBE" v-for="i in detail.project">{{i.project_name||''}}</a>
             </div>
           </div>
           <img class="back" src="/images/backbtn@2x.png" alt="" width="50" height="50" @click="hideDetail" style="">
@@ -185,8 +185,11 @@ export default {
         console.log(error);
       });
     },
-    jumpTo (url) {
-      return
+    jumpTo (id) {
+      this.$axios.post('/sdata/rest/service/dataapi/rest/491453fc-08a8-4daa-b282-7b49b077175e', {id: id})
+          .then(res => {
+            this.$router.push({ name: 'expertDetail',query:{pageName:'科创专家'},params: res.data.result[0]})
+          })
     }
   }
 }

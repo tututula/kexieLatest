@@ -1,10 +1,10 @@
 <template>
   <div class="childPage" style="">
     <div style="height: 78px;display: flex;align-items: end;justify-content: space-between;background: #FFF;padding: 0 50px">
-      <Input search v-model.trim="serchCondition" @on-enter="queryList()" placeholder="搜索产品名称、缩写、功能名称（如：云服务" style="width: 738px;height: 36px"/>
-      <div style="height: 36px;flex: 1;display: flex;align-items: center;margin-left: 20px">
+      <Input search v-model.trim="serchCondition" @on-enter="queryList()" placeholder="搜索产品名称、缩写、功能名称（如：云服务" style="width: 100%;height: 36px"/>
+<!--      <div style="height: 36px;flex: 1;display: flex;align-items: center;margin-left: 20px">
         <Icon type="md-flame" color="#f85f52" />
-      </div>
+      </div>-->
     </div>
     <div class="content">
       <div style="position: relative">
@@ -127,7 +127,6 @@ export default {
                         .then(res => {
                           this.$router.push({ name: 'expertDetail',query:{pageName:'科创专家'},params: res.data.result[0]})
                         })
-
                   }
                 },
               }, params.row.manager_id)

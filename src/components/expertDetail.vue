@@ -20,7 +20,7 @@
                     </div>
                   </div>
                   <div style="display: flex;padding-top: 20px">
-                    <div style="padding-right: 50px;display: flex;flex-direction: column;justify-content: space-between">
+                    <div style="padding-right: 50px;display: flex;flex-direction: column;justify-content: space-between;text-align: center">
                       <p style="font-size: 26px;font-weight: bold;color: #2B5FBE;">{{expert.job_leval}}</p>
                       <p>岗位级别</p>
                     </div>
@@ -46,10 +46,10 @@
           </Row>
           <Row class="card" style="margin-top: 15px;height: 300px;padding: 10px 40px">
             <Col :span="10">
-              <p class="title">主导科创能力</p>
+              <p class="title"><img src="/images/abilityIcon.png" alt="" width="20" height="20" style="margin-right: 10px">主导科创能力</p>
               <p class="label"><span class="text">{{expert.lead_project}}</span></p>
-              <p class="title">获奖情况</p>
-              <p class="label" v-for="i in prize">{{i.cert_name || '无'}}</p>
+              <p class="title"><img src="/images/prizeIcon.png" alt="" width="20" height="20" style="margin-right: 10px">证书</p>
+              <p class="label" v-for="i in prize">{{i.cert_name || '无'}} &nbsp&nbsp<span>{{ i.cert_start_time !== undefined ?  $moment(new Date(i.cert_start_time)).format('yyyy-MM-DD') : '' }}</span></p>
             </Col>
             <Col :span="14">
               <div id="radar" style="width: 100%;height: 100%"></div>
@@ -59,9 +59,9 @@
         <Col class="card" :span="8" style="max-height: 560px;overflow: auto">
           <Timeline>
             <TimelineItem v-for="item in projects">
-              <p class="timeline-title">20/01-20/12</p>
-              <div class="departmentTag">鸿信视频分析系统产品1.0</div>
-              <p class="label">工作内容 : <span class="text">带领团队设计产品功能、页面样式、交互逻辑流程；设计系统架构；负责后端交通与行人视频分析算法微服务；推动项目落地，落地集团MEC智慧文旅、DICT交通视频云等项目。</span></p>
+              <p class="timeline-title">{{ $moment(new Date(item.start_time)).format('yyyy-MM-DD')}}</p>
+              <div class="departmentTag">{{item.department_name}}</div>
+              <p class="label">项目名称 : <span class="text">{{item.project_name}}</span></p>
             </TimelineItem>
           </Timeline>
         </Col>
@@ -185,6 +185,24 @@ export default {
   },
   methods:{
     initChart(data){
+      if (data.length === 0) {
+        data[0] = {
+          ALGORITHM_MODEL_SCORE: '',
+          ARCH_DESIGN_SCORE: '',
+          DEMAND_ANALYSIS_SCORE: '',
+          DEV_COMP_SCORE:  '',
+          DEV_TOOL_SCORE:  '',
+          FUNC_DESIGN_SCORE:  '',
+          IMPL_OPER_SCORE: '',
+          PROF_SKILL_ASSESS: '',
+          PROF_TECH_FIELD: '',
+          PROJECT_MANAGE_SCORE:  '',
+          RD_FRAMEWORK_SCORE: '',
+          RD_LANGUAGE_SCORE: '',
+        }
+      }
+      delete data[0].mobile
+      delete data[0].uesr_name
       let indicators = Object.keys(data[0]).map(item => {
         return {
           text: item
@@ -280,14 +298,11 @@ export default {
       mychart.setOption(option)
     },
     queryProject(){
-      this.$axios.post('/sdata/rest/dataservice/rest/orchestration/b7b25978-63a8-4cc3-b8af-4b2ab87661c6', {
-        "param": {
-          "expertId": this.$route.query.id
-        }
+      this.$axios.post('/sdata/rest/service/dataapi/rest/353679a8-2261-4d59-a0d4-f07b2de60321', {
+        "mobile": this.expert.mobile
       })
           .then((response)=>{
-            this.projects = response.data.result.evaluate
-           console.log(response)
+            this.projects = response.data.result
           })
     },
     queryScore(){
@@ -316,9 +331,6 @@ export default {
       this.$axios.post('/sdata/rest/service/dataapi/rest/f7f008f5-2233-489b-b708-e7a55e640447', {
         "uesr_name": this.expert.name
       }).then(res => {
-        if (res.data.result.length === 0) {
-          return
-        }
         this.initChart(res.data.result)
       })
     },
@@ -331,7 +343,8 @@ export default {
     },
     queryAbilityTags () {
       this.$axios.post('/sdata/rest/service/dataapi/rest/a06185fa-d68c-4b19-a805-1016d70b83b8', {
-        "uesr_name": this.expert.name
+        "uesr_name": this.expert.name,
+        "mobile": this.expert.mobile
       }).then(res => {
         this.abilityTags = res.data.result
       })
@@ -384,6 +397,8 @@ export default {
     font-weight: bold;
     color: #000;
     margin: 10px 0;
+    display: flex;
+    align-items: center;
     .text{
       font-weight: normal;
       white-space: pre-wrap;
@@ -415,5 +430,7 @@ export default {
   font-weight: bold;
   color: #2B5FBE;
   margin: 10px 0;
+ display: flex;
+  align-items: center;
 }
 </style>

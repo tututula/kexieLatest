@@ -48,9 +48,9 @@
       <p class="titles">落地案例</p>
       <Carousel class="projects" v-model="value2" loop :radius-dot="true" :height="472" style="margin-top: 42px;background: #FFF;min-height: 472px">
         <CarouselItem v-for="i in examples">
-          <div style="height: 100%;background-repeat: no-repeat;background-size: 100% 100%;background-image: url('/images/zhongxing@2x.png')">
+          <div style="height: 100%;background-repeat: no-repeat;background-size: 100% 100%;background-image: url('/images/exampleBg.png')">
             <div style="width: 1023px;height: 100%;float: right;padding: 80px 370px 0 63px;text-align: left;color:#FFF;">
-              <img v-if="i.picture_url" width="186" height="60" src="/images/zhongxingLogo@2x.png" alt="">
+              <img v-if="i.picture_url" width="186" height="60" :src="i.picture_url" alt="">
               <p style="font-size: 24px;font-weight: 400;margin: 24px 0">{{ i.project_name }}</p>
               <p style="font-size: 14px;font-weight: 400">{{i.project_description}}</p>
               <Button type="default" ghost style="margin-top: 50px">查看案例</Button>
@@ -101,7 +101,7 @@
                   <span style="font-size: 14px;margin-left: 170px">人才级别</span>
                   <span style="font-size: 18px;font-weight: bold;color: #2B5FBE;margin-left: 15px">{{item.talent_level}}</span>
                 </div>
-                <div style="display: flex;padding-top: 20px">
+                <div style="display: flex;padding-top: 20px;text-align: center">
                   <div style="padding-right: 50px">
                     <p style="font-size: 26px;font-weight: bold;color: #2B5FBE;">{{item.job_leval}}</p>
                     <p>岗位级别</p>
