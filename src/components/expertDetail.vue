@@ -101,6 +101,20 @@ export default {
   },
   data(){
     return {
+      chartLabel: {
+        ALGORITHM_MODEL_SCORE: '算法模型',
+        ARCH_DESIGN_SCORE: '架构设计',
+        DEMAND_ANALYSIS_SCORE: '需求能力分析',
+        DEV_COMP_SCORE:  '开发组件',
+        DEV_TOOL_SCORE:  '开发工具',
+        FUNC_DESIGN_SCORE:  '功能设计',
+        IMPL_OPER_SCORE: '实施运维',
+        PROF_SKILL_ASSESS: '专业技能评定',
+        PROF_TECH_FIELD: '专业技术领域',
+        PROJECT_MANAGE_SCORE:  '项目管理能力',
+        RD_FRAMEWORK_SCORE: '研发框架',
+        RD_LANGUAGE_SCORE: '研发语言',
+      },
       tableData:[
         {
           name: 'John Brown',
@@ -130,7 +144,7 @@ export default {
         },
         {
           title: '最终分数',
-          key: 'finish_percent',
+          key: 'final_score',
           align: 'center'
         },
         {
@@ -205,7 +219,7 @@ export default {
       delete data[0].uesr_name
       let indicators = Object.keys(data[0]).map(item => {
         return {
-          text: item
+          text: this.chartLabel[item]
         }
       })
       let optionData = Object.keys(data[0]).map(item=>{
@@ -302,7 +316,9 @@ export default {
         "mobile": this.expert.mobile
       })
           .then((response)=>{
-            this.projects = response.data.result
+            this.projects = response.data.result.sort((a, b) => {
+              return b.start_time - a.start_time
+            })
           })
     },
     queryScore(){
@@ -313,7 +329,6 @@ export default {
           "expertId": this.expert.id
         }
       })]).then(res => {
-        console.log(res)
         let arr = JSON.parse(JSON.stringify(res[0].data.result))
         let scoreDetailNameArr = res[1].data.result.evaluate
         arr.forEach((item) => {
