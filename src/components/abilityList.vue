@@ -13,34 +13,36 @@
         </ul>
       </div>
       <div :class="{isOverflow: !detailShow}" style="padding: 20px 0 0 20px;flex: 1;position: relative;max-height: 1090px;">
-        <div v-if="!detailShow" class="card" style="width:99%;height: 251px;color: #666" v-for="(item, index) in list">
-          <div style="display: flex">
-            <img :src="item.picture_url" alt="" width="303" height="191" style="margin-right: 24px">
-            <div style="flex: 1;position: relative">
-              <div style="display: flex;justify-content: space-between;align-items: center">
-                <p style="font-weight: bold;color: #181818;">{{ item.ability_name }} <span style="color:#00D856;">{{ item.version }}</span></p>
-                <Rate
-                    v-model="item.ability_level"
-                    disabled
-                    :show-text="false"
-                >
-                </Rate>
+        <template v-if="!detailShow">
+          <div class="card" style="width:99%;height: 251px;color: #666" v-for="(item, index) in list" :key="index">
+            <div style="display: flex">
+              <img :src="item.picture_url" alt="" width="303" height="191" style="margin-right: 24px">
+              <div style="flex: 1;position: relative">
+                <div style="display: flex;justify-content: space-between;align-items: center">
+                  <p style="font-weight: bold;color: #181818;">{{ item.ability_name }} <span style="color:#00D856;">{{ item.version }}</span></p>
+                  <Rate
+                      v-model="item.ability_level"
+                      disabled
+                      :show-text="false"
+                  >
+                  </Rate>
+                </div>
+                <div style="display: grid;grid-template-columns: repeat(2, 1fr);margin-top: 10px">
+                  <!--                <p>负责人 : <span style="color: #2B5FBE;font-weight: bold">陈思洋</span></p>-->
+                  <p>复用次数 : <span>{{ item.repeat_use_counts }}</span></p>
+                  <p>提供形式 : <span>{{ item.provider_type }}</span></p>
+                </div>
+                <!--              <div>
+                                <p style="white-space: normal"> 落地案例 : <span style="margin-right: 10px;color: #2B5FBE;font-weight: bold">宿迁无人机平台</span></p>
+                              </div>-->
+                <p style="margin: 12px 0;width: 100%;height: 60px;overflow: hidden;text-overflow:ellipsis;word-break: break-all;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 2;">
+                  {{ item.ability_description }}
+                </p>
+                <Button type="primary" style="width: 100px;height: 30px;background: #2B5FBE;position: absolute;bottom: 0" @click="showDetail(item)">了解详情</Button>
               </div>
-              <div style="display: grid;grid-template-columns: repeat(2, 1fr);margin-top: 10px">
-<!--                <p>负责人 : <span style="color: #2B5FBE;font-weight: bold">陈思洋</span></p>-->
-                <p>复用次数 : <span>{{ item.repeat_use_counts }}</span></p>
-                <p>提供形式 : <span>{{ item.provider_type }}</span></p>
-              </div>
-<!--              <div>
-                <p style="white-space: normal"> 落地案例 : <span style="margin-right: 10px;color: #2B5FBE;font-weight: bold">宿迁无人机平台</span></p>
-              </div>-->
-              <p style="margin: 12px 0;width: 100%;height: 60px;overflow: hidden;text-overflow:ellipsis;word-break: break-all;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 2;">
-                {{ item.ability_description }}
-              </p>
-              <Button type="primary" style="width: 100px;height: 30px;background: #2B5FBE;position: absolute;bottom: 0" @click="showDetail(item)">了解详情</Button>
             </div>
           </div>
-        </div>
+        </template>
         <div class="detail" v-if="detailShow">
           <div style="display: flex">
             <img src="" alt="" width="303" height="191">
@@ -178,6 +180,9 @@ export default {
       .then((response)=>{
         this.list = response.data.result.map(item => {
           item.ability_level = item.ability_level ? parseFloat(item.ability_level.replace(/[^\d]/g,'')) : 0
+          if (item.picture_url) {
+            item.picture_url = JSON.parse(item.picture_url)[0].url
+          } else item.picture_url = '/images/abilityList.png'
           return item
         })
       })

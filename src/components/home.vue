@@ -92,7 +92,7 @@
           <CarouselItem v-for="item in expertList">
             <div class="carouselItem">
               <div style="width: 138px;height: 200px;margin-right: 30px">
-                <img src="" alt="" style="width: 100%;height: 100%">
+                <img :src="item.picture_url" alt="" style="width: 100%;height: 80%">
               </div>
               <div style="flex: 1">
                 <div style="text-align: left">
@@ -270,13 +270,13 @@ export default {
       })
           .then((res)=>{
             let arr = res.data.result
-            console.log( arr)
             this.expertList = arr.map(item => {
               this.categoryBtn.forEach(i => {
                 if (i.id === item.ability_type) {
                   item.ability_type = i.name
                 }
               })
+              item.picture_url = '/images/photo.png'
               return item
             })
           })

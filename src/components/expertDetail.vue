@@ -7,7 +7,7 @@
             <div class="carouselItem">
               <div style="display: flex">
                 <div style="width: 107px;height: 135px;margin-right: 30px">
-                  <img src="" alt="" style="width: 100%;height: 100%">
+                  <img :src="  expert.picture_url ||  '/images/photo.png'" alt="" style="width: 100%;height: 100%">
                 </div>
                 <div style="flex: 1">
                   <div style="display: flex;justify-content: space-between">
