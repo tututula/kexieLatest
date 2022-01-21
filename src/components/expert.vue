@@ -14,8 +14,10 @@
         <div style=" padding: 15px;width: 100%;height: 100%">
           <p class="name">{{ i.name }}</p>
           <p class="group">{{ i.work_team }}</p>
-          <div style="margin-top:15px;min-height: 80px;">
-            <div class="tag" v-for="i in i.telnet">{{}}</div>
+          <div style="margin-top:15px;height: 80px;">
+            <div style="height: 55px;overflow: hidden">
+              <div class="tag" v-for="j in i.abilityTags">{{j.skill_name}}</div>
+            </div>
           </div>
           <div class="flex-center">
             <div style="text-align: center;font-size: 12px">
@@ -87,6 +89,15 @@ export default {
       })
       .then((response)=>{
         this.expertList = response.data.result
+        this.expertList.forEach((item)=>{
+          this.$axios.post('/sdata/rest/service/dataapi/rest/a06185fa-d68c-4b19-a805-1016d70b83b8', {
+            "uesr_name": item.name,
+            "mobile": item.mobile
+          }).then(res => {
+            item.abilityTags = res.data.result.slice(0,6)
+            this.$forceUpdate()
+          })
+        })
       })
     }
   }

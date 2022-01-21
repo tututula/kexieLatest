@@ -39,7 +39,7 @@
         <Table :data="tableData" :columns="tableColumns" stripe></Table>
         <div style="margin: 30px 0 0;overflow: hidden">
           <div style="float: right;">
-            <Page :total="total" :current="formData.page"  @on-change="changePage($event,'page')" @on-page-size-change="changePage($event,'pageSize')" show-elevator show-sizer show-total ></Page>
+            <Page :total="total" :current="formData.page" :page="formData.page" :page-size="formData.pageSize"  @on-change="changePage($event,'page')" @on-page-size-change="changePage($event,'pageSize')" show-elevator show-sizer show-total ></Page>
           </div>
         </div>
       </div>
@@ -182,8 +182,8 @@ export default {
     },
     queryList(){
       let obj = {
-        "pageNum": "1",
-        "pageSize": "20",
+        "pageNum": this.formData.page+'',
+        "pageSize": this.formData.pageSize+'',
         "manager_id": this.formData.personInChargeValue || null,
         "provide_type": this.formData.abilityType || null,
         "setup_time": this.formData.year,

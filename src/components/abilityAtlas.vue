@@ -178,6 +178,11 @@ export default {
   width: 297px;
   height: 413px;
   background: linear-gradient(180deg,#edf0f4 0%,#FFF 100%);
+  box-shadow: 4px 12px 30px 1px rgba(0, 23, 85, 0.33000001311302185);
+  border-radius: 10px 10px 10px 10px;
+  opacity: 1;
+  border: 3px solid;
+  border-image: linear-gradient(151deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 1)) 3 3;
   .btn{
     width: 104px;
     height: 36px;
